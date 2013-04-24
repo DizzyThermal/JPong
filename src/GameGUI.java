@@ -108,7 +108,15 @@ public class GameGUI extends JFrame implements KeyListener
 			public void run()
 			{
 				while(this.isAlive())
-				{	
+				{
+					sendData = getPlayerCoordinates(player).getBytes();
+					try
+					{
+						sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
+						clientSocket.send(sendPacket);
+					}
+					catch(Exception ex) { ex.printStackTrace(); }
+
 					receiveData = new byte[1024];
 					receivePacket = new DatagramPacket(receiveData, receiveData.length);
 					try { clientSocket.receive(receivePacket); }
@@ -190,14 +198,6 @@ public class GameGUI extends JFrame implements KeyListener
 			else if((player == 2) && (p2.getY() < 490))
 				p2.move((int)(p2.getX()), (int)p2.getY() + 20);
 		}
-		
-		sendData = getPlayerCoordinates(player).getBytes();
-		try
-		{
-			sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
-			clientSocket.send(sendPacket);
-		}
-		catch(Exception ex) { ex.printStackTrace(); }
 		repaint();
 	}
 	
