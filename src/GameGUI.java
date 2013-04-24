@@ -48,8 +48,8 @@ public class GameGUI extends JFrame implements KeyListener
 	public static DatagramSocket clientSocket;
 	public static DatagramPacket sendPacket;
 	public static DatagramPacket receivePacket;
-	public static byte[] receiveData;
 	public static byte[] sendData;
+	public static byte[] receiveData;
 	
 	public static Graphics2D g2;
 	
@@ -61,8 +61,7 @@ public class GameGUI extends JFrame implements KeyListener
 	public static int player1Score = 0;
 	public static int player2Score = 0;
 	
-	public static Thread listeningThread;
-	public static Thread sendingThread;
+	public static Thread thread;
 	
 	GameGUI()
 	{
@@ -76,20 +75,34 @@ public class GameGUI extends JFrame implements KeyListener
 
 		try
 		{
-			sendData = new byte[1024];
-			receiveData = new byte[1024];
-			
 			sendData = "/connected".getBytes();
 			
-			clientSocket = new DatagramSocket();
+			clientSocket = new DatagramSocket(Integer.parseInt(Resource.PORT));
 			sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
-			receivePacket = new DatagramPacket(receiveData, receiveData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
 			
+			// Send Ready
 			clientSocket.send(sendPacket);
+			
+			// Wait for Player ID
+			clientSocket.receive(receivePacket);
+			if(receiveData.toString().contains("/player"))
+			{
+				player = Integer.parseInt(receiveData.toString().split(" ")[1]);
+
+				// Wait for GO (Other Player to be Ready)
+				clientSocket.receive(receivePacket);
+				if(receiveData.toString().contains("/go"))
+					player = Integer.parseInt(receiveData.toString().split(" ")[1]);
+				else
+					System.out.println("Server Goofed Up with the GO Signal");
+			}
+			else
+				System.out.println("Server Goofed Up with your ID!");
 		}
 		catch (Exception e) { e.printStackTrace(); }
 
-		listeningThread = (new Thread()
+		// Info in, Players Ready, Commence!
+		thread = (new Thread()
 		{
 			@Override
 			public void run()
@@ -105,33 +118,16 @@ public class GameGUI extends JFrame implements KeyListener
 						updateCoordinates(incomingMessage);
 					else if(incomingMessage.contains("/score"))
 						updateScore(incomingMessage);
-				}
-			}
-		});
-		listeningThread.start();
-		
-		this.addKeyListener(this);
-		
-		
-		sendingThread = (new Thread()
-		{
-			@Override
-			public void run()
-			{
-				while(true)
-				{
-					try { Thread.sleep(20); }
-					catch(Exception e) { e.printStackTrace(); }
-					
-					String coords = "/coordinates " + ((player == 1)?p1.getX() + "\\" + p1.getY():p2.getX() + "\\" + p2.getY());
-					sendData = coords.getBytes();
-					
+
+					sendData = getPlayerCoordinates(player).getBytes();
 					try { clientSocket.send(sendPacket); }
 					catch(Exception e) { e.printStackTrace(); }
 				}
 			}
 		});
-		sendingThread.start();
+		thread.start();
+		
+		addKeyListener(this);
 	}
 
 	public static String getPlayerCoordinates(int player)
