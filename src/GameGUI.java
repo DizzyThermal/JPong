@@ -90,6 +90,8 @@ public class GameGUI extends JFrame implements KeyListener
 				player = Integer.parseInt((new String(receivePacket.getData())).trim().split(" ")[1]);
 
 				// Wait for GO (Other Player to be Ready)
+				receiveData = new byte[1024];
+				receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				clientSocket.receive(receivePacket);
 				if((new String(receivePacket.getData())).contains("/go"))
 					player = Integer.parseInt((new String(receivePacket.getData())).split(" ")[1]);
@@ -110,9 +112,15 @@ public class GameGUI extends JFrame implements KeyListener
 				while(this.isAlive())
 				{
 					sendData = getPlayerCoordinates(player).getBytes();
-					try { clientSocket.send(sendPacket); }
+					try
+					{
+						sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
+						clientSocket.send(sendPacket);
+					}
 					catch(Exception e) { e.printStackTrace(); }
 					
+					receiveData = new byte[1024];
+					receivePacket = new DatagramPacket(receiveData, receiveData.length);
 					try { clientSocket.receive(receivePacket); }
 					catch(Exception e) { e.printStackTrace(); }
 
