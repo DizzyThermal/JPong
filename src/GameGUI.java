@@ -176,7 +176,7 @@ public class GameGUI extends JFrame implements KeyListener
 		else
 			p1.move((int)p1.getX(), Integer.parseInt(coords[0].split("\\.")[0]));
 		
-		ball.move(Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
+		ball.move(Integer.parseInt(coords[1]), Integer.parseInt(coords[2].split("\\.")[0]));
 	}
 	
 	@Override
