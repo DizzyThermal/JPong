@@ -173,11 +173,11 @@ public class GameGUI extends JFrame implements KeyListener
 		
 		String[] coords = incomingMessage.split("\\\\");
 		if(player == 1)
-			p2.move((int)p2.getX(), Integer.parseInt(coords[0].split("\\.")[0]));
+			p2.setLocation((int)p2.getX(), Integer.parseInt(coords[0].split("\\.")[0]));
 		else
-			p1.move((int)p1.getX(), Integer.parseInt(coords[0].split("\\.")[0]));
+			p1.setLocation((int)p1.getX(), Integer.parseInt(coords[0].split("\\.")[0]));
 		
-		ball.move(Integer.parseInt(coords[1].split("\\.")[0]), Integer.parseInt(coords[2].split("\\.")[0]));
+		ball.setLocation(Integer.parseInt(coords[1].split("\\.")[0]), Integer.parseInt(coords[2].split("\\.")[0]));
 	}
 	
 	@Override
@@ -186,16 +186,16 @@ public class GameGUI extends JFrame implements KeyListener
 		if((e.getKeyCode() == KeyEvent.VK_UP) || (e.getKeyCode() == KeyEvent.VK_W))
 		{
 			if((player == 1) && (p1.getY() > 10))
-				p1.move((int)(p1.getX()), (int)p1.getY() - 20);
+				p1.setLocation((int)(p1.getX()), (int)p1.getY() - 20);
 			else if((player == 2) && (p2.getY() > 10))
-				p2.move((int)(p2.getX()), (int)p2.getY() - 20);
+				p2.setLocation((int)(p2.getX()), (int)p2.getY() - 20);
 		}
 		if((e.getKeyCode() == KeyEvent.VK_DOWN) || (e.getKeyCode() == KeyEvent.VK_S))
 		{
 			if((player == 1) && (p1.getY() < 490))
-				p1.move((int)(p1.getX()), (int)p1.getY() + 20);
+				p1.setLocation((int)(p1.getX()), (int)p1.getY() + 20);
 			else if((player == 2) && (p2.getY() < 490))
-				p2.move((int)(p2.getX()), (int)p2.getY() + 20);
+				p2.setLocation((int)(p2.getX()), (int)p2.getY() + 20);
 		}
 		repaint();
 	}
