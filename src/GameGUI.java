@@ -7,10 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -46,10 +45,12 @@ public class GameGUI extends JFrame implements KeyListener
 		}
 	};
 	
-	public static Socket clientSocket;
+	public static DatagramSocket clientSocket;
+	public static DatagramPacket sendPacket;
+	public static DatagramPacket receivePacket;
+	public static byte[] receiveData;
+	public static byte[] sendData;
 	
-	public static BufferedReader bReader;
-	public static PrintWriter pWriter;
 	public static Graphics2D g2;
 	
 	public static Rectangle p1 = new Rectangle(20, 240, 20, 100);
@@ -75,12 +76,16 @@ public class GameGUI extends JFrame implements KeyListener
 
 		try
 		{
-			clientSocket = new Socket(Resource.IP, Integer.parseInt(Resource.PORT));
-			pWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-			bReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			sendData = new byte[1024];
+			receiveData = new byte[1024];
 			
-			pWriter.println("/connected ");
+			sendData = "/connected".getBytes();
 			
+			clientSocket = new DatagramSocket();
+			sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
+			receivePacket = new DatagramPacket(receiveData, receiveData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
+			
+			clientSocket.send(sendPacket);
 		}
 		catch (Exception e) { e.printStackTrace(); }
 
@@ -91,21 +96,15 @@ public class GameGUI extends JFrame implements KeyListener
 			{
 				while(this.isAlive())
 				{
-					String incomingMessage = "";
-					try
-					{
-						if(bReader != null && bReader.ready())
-							incomingMessage = bReader.readLine();
-					}
+					try { clientSocket.receive(receivePacket); }
 					catch(Exception e) { e.printStackTrace(); }
+
+					String incomingMessage = receiveData.toString();
 					
-					if(!incomingMessage.equals(""))
-					{
-						if(incomingMessage.contains("/coordinates"))
-							updateCoordinates(incomingMessage);
-						else if(incomingMessage.contains("/score"))
-							updateScore(incomingMessage);
-					}
+					if(incomingMessage.contains("/coordinates"))
+						updateCoordinates(incomingMessage);
+					else if(incomingMessage.contains("/score"))
+						updateScore(incomingMessage);
 				}
 			}
 		});
@@ -124,7 +123,11 @@ public class GameGUI extends JFrame implements KeyListener
 					try { Thread.sleep(20); }
 					catch(Exception e) { e.printStackTrace(); }
 					
-					pWriter.println("/coordinates " + ((player == 1)?p1.getX() + "\\" + p1.getY():p2.getX() + "\\" + p2.getY()));
+					String coords = "/coordinates " + ((player == 1)?p1.getX() + "\\" + p1.getY():p2.getX() + "\\" + p2.getY());
+					sendData = coords.getBytes();
+					
+					try { clientSocket.send(sendPacket); }
+					catch(Exception e) { e.printStackTrace(); }
 				}
 			}
 		});
