@@ -26,7 +26,7 @@ public class ConnectionGUI extends JFrame implements ActionListener, KeyListener
 	JButton okButton = new JButton("OK");
 
 	JTextField address = new JTextField();
-	JSpinner port = new JSpinner(new SpinnerNumberModel(8010, 0, 65535, 1));
+	JSpinner port = new JSpinner(new SpinnerNumberModel(Integer.parseInt(Resource.PORT), 0, 65535, 1));
 	
 	ConnectionGUI()
 	{

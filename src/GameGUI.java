@@ -48,8 +48,8 @@ public class GameGUI extends JFrame implements KeyListener
 	public static DatagramSocket clientSocket;
 	public static DatagramPacket sendPacket;
 	public static DatagramPacket receivePacket;
-	public static byte[] sendData;
-	public static byte[] receiveData;
+	public static byte[] sendData = new byte[1024];
+	public static byte[] receiveData = new byte[1024];
 	
 	public static Graphics2D g2;
 	
@@ -79,20 +79,20 @@ public class GameGUI extends JFrame implements KeyListener
 			
 			clientSocket = new DatagramSocket(Integer.parseInt(Resource.PORT));
 			sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(Resource.IP), Integer.parseInt(Resource.PORT));
-			
+			receivePacket = new DatagramPacket(receiveData, receiveData.length);
 			// Send Ready
 			clientSocket.send(sendPacket);
 			
 			// Wait for Player ID
 			clientSocket.receive(receivePacket);
-			if((new String(receiveData)).contains("/player"))
+			if((new String(receivePacket.getData())).trim().contains("/player"))
 			{
-				player = Integer.parseInt((new String(receiveData)).split(" ")[1]);
+				player = Integer.parseInt((new String(receivePacket.getData())).trim().split(" ")[1]);
 
 				// Wait for GO (Other Player to be Ready)
 				clientSocket.receive(receivePacket);
-				if((new String(receiveData)).contains("/go"))
-					player = Integer.parseInt((new String(receiveData)).split(" ")[1]);
+				if((new String(receivePacket.getData())).contains("/go"))
+					player = Integer.parseInt((new String(receivePacket.getData())).split(" ")[1]);
 				else
 					System.out.println("Server Goofed Up with the GO Signal");
 			}
@@ -116,7 +116,7 @@ public class GameGUI extends JFrame implements KeyListener
 					try { clientSocket.receive(receivePacket); }
 					catch(Exception e) { e.printStackTrace(); }
 
-					String incomingMessage = new String(receiveData);
+					String incomingMessage = new String(receivePacket.getData());
 					
 					if(incomingMessage.contains("/coordinates"))
 						updateCoordinates(incomingMessage);
