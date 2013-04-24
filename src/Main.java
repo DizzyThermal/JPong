@@ -24,7 +24,7 @@ public class Main
 		GameGUI gGo = new GameGUI();
 
 		gGo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gGo.setSize(800, 600);
+		gGo.setSize(800, 660);
 		gGo.setResizable(false);
 		gGo.setVisible(true);
 	}

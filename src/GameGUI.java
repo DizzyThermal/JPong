@@ -123,7 +123,6 @@ public class GameGUI extends JFrame implements KeyListener
 					catch(Exception e) { e.printStackTrace(); }
 
 					String incomingMessage = new String(receivePacket.getData()).trim();
-					System.out.println(incomingMessage);
 					
 					if(incomingMessage.contains("/coordinates"))
 						updateCoordinates(incomingMessage);
