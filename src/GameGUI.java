@@ -172,9 +172,9 @@ public class GameGUI extends JFrame implements KeyListener
 		
 		String[] coords = incomingMessage.split("\\\\");
 		if(player == 1)
-			p2.move((int)p2.getX(), Integer.parseInt(coords[0]));
+			p2.move((int)p2.getX(), Integer.parseInt(coords[0].split("\\.")[0]));
 		else
-			p1.move((int)p1.getX(), Integer.parseInt(coords[0]));
+			p1.move((int)p1.getX(), Integer.parseInt(coords[0].split("\\.")[0]));
 		
 		ball.move(Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
 	}
