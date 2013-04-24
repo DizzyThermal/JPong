@@ -93,7 +93,7 @@ public class GameGUI extends JFrame implements KeyListener
 				receiveData = new byte[1024];
 				receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				clientSocket.receive(receivePacket);
-				if(!(new String(receivePacket.getData())).contains("/go"))
+				if(!(new String(receivePacket.getData()).trim()).contains("/go"))
 					System.out.println("Server Goofed Up with the GO Signal");
 			}
 			else
@@ -122,7 +122,7 @@ public class GameGUI extends JFrame implements KeyListener
 					try { clientSocket.receive(receivePacket); }
 					catch(Exception e) { e.printStackTrace(); }
 
-					String incomingMessage = new String(receivePacket.getData());
+					String incomingMessage = new String(receivePacket.getData()).trim();
 					
 					if(incomingMessage.contains("/coordinates"))
 						updateCoordinates(incomingMessage);
