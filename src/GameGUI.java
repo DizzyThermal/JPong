@@ -129,8 +129,10 @@ public class GameGUI extends JFrame implements KeyListener
 						updateCoordinates(incomingMessage);
 					else if(incomingMessage.contains("/score"))
 						updateScore(incomingMessage);
+					repaint();
 				}
 			}
+			
 		});
 		thread.start();
 		
