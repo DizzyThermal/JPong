@@ -93,9 +93,7 @@ public class GameGUI extends JFrame implements KeyListener
 				receiveData = new byte[1024];
 				receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				clientSocket.receive(receivePacket);
-				if((new String(receivePacket.getData())).contains("/go"))
-					player = Integer.parseInt((new String(receivePacket.getData())).split(" ")[1]);
-				else
+				if(!(new String(receivePacket.getData())).contains("/go"))
 					System.out.println("Server Goofed Up with the GO Signal");
 			}
 			else
