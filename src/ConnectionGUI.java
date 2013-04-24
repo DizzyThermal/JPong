@@ -20,16 +20,13 @@ public class ConnectionGUI extends JFrame implements ActionListener, KeyListener
 	
 	JPanel mainPanel = new JPanel();
 	JLabel titleLabel = new JLabel("Connection Information");
-	JLabel addressLabel = new JLabel("Registrar IP: ");
-	JLabel portLabel = new JLabel("Registrar Port: ");
-	JLabel nameLabel = new JLabel("Username: ");
+	JLabel addressLabel = new JLabel("Address: ");
+	JLabel portLabel = new JLabel("Port: ");
 	
 	JButton okButton = new JButton("OK");
 
-	JTextField name = new JTextField();
 	JTextField address = new JTextField();
 	JSpinner port = new JSpinner(new SpinnerNumberModel(8010, 0, 65535, 1));
-	JTextField download = new JTextField();
 	
 	ConnectionGUI()
 	{
@@ -62,13 +59,6 @@ public class ConnectionGUI extends JFrame implements ActionListener, KeyListener
 		port.addKeyListener(this);
 		mainPanel.add(port);
 		
-		nameLabel.setPreferredSize(new Dimension(250, 20));
-		mainPanel.add(nameLabel);
-		name.setPreferredSize(new Dimension(250, 20));
-		name.setText(Resource.USERNAME);
-		name.addKeyListener(this);
-		mainPanel.add(name);
-		
 		mainPanel.add(okButton);
 		mainPanel.addKeyListener(this);
 		okButton.addActionListener(this);
@@ -79,12 +69,10 @@ public class ConnectionGUI extends JFrame implements ActionListener, KeyListener
 	{
 		if(e.getSource() == okButton)
 		{
-			Resource.USERNAME = name.getText().replace("/", "");
 			Resource.IP = address.getText();
 			Resource.PORT = String.valueOf(port.getValue());
-			Resource.FILE_SAVE_DIR = download.getText();
 			this.setVisible(false);
-			GUI.connectionGUIStatus = true;
+			Main.connectionGUIStatus = true;
 		}
 	}
 
@@ -94,12 +82,10 @@ public class ConnectionGUI extends JFrame implements ActionListener, KeyListener
 	{
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
-			Resource.USERNAME = name.getText().replace("/", "");
 			Resource.IP = address.getText();
 			Resource.PORT = String.valueOf(port.getValue());
-			Resource.FILE_SAVE_DIR = download.getText();
 			this.setVisible(false);
-			GUI.connectionGUIStatus = true;
+			Main.connectionGUIStatus = true;
 		}
 	}
 
