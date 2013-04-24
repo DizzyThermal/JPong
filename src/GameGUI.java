@@ -123,6 +123,7 @@ public class GameGUI extends JFrame implements KeyListener
 					catch(Exception e) { e.printStackTrace(); }
 
 					String incomingMessage = new String(receivePacket.getData()).trim();
+					System.out.println(incomingMessage);
 					
 					if(incomingMessage.contains("/coordinates"))
 						updateCoordinates(incomingMessage);
@@ -171,11 +172,11 @@ public class GameGUI extends JFrame implements KeyListener
 		
 		String[] coords = incomingMessage.split("\\\\");
 		if(player == 1)
-			p2.move(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+			p2.move((int)p2.getX(), Integer.parseInt(coords[0]));
 		else
-			p1.move(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+			p1.move((int)p1.getX(), Integer.parseInt(coords[0]));
 		
-		ball.move(Integer.parseInt(coords[2]), Integer.parseInt(coords[3]));
+		ball.move(Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
 	}
 	
 	@Override

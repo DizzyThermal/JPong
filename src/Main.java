@@ -9,7 +9,7 @@ public class Main
 		ConnectionGUI cGUI = new ConnectionGUI();
 		
 		cGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		cGUI.setSize(300, 180);
+		cGUI.setSize(300, 210);
 		cGUI.setResizable(false);
 		cGUI.setVisible(true);
 		
