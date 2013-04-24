@@ -85,14 +85,14 @@ public class GameGUI extends JFrame implements KeyListener
 			
 			// Wait for Player ID
 			clientSocket.receive(receivePacket);
-			if(receiveData.toString().contains("/player"))
+			if((new String(receiveData)).contains("/player"))
 			{
-				player = Integer.parseInt(receiveData.toString().split(" ")[1]);
+				player = Integer.parseInt((new String(receiveData)).split(" ")[1]);
 
 				// Wait for GO (Other Player to be Ready)
 				clientSocket.receive(receivePacket);
-				if(receiveData.toString().contains("/go"))
-					player = Integer.parseInt(receiveData.toString().split(" ")[1]);
+				if((new String(receiveData)).contains("/go"))
+					player = Integer.parseInt((new String(receiveData)).split(" ")[1]);
 				else
 					System.out.println("Server Goofed Up with the GO Signal");
 			}
@@ -109,19 +109,19 @@ public class GameGUI extends JFrame implements KeyListener
 			{
 				while(this.isAlive())
 				{
+					sendData = getPlayerCoordinates(player).getBytes();
+					try { clientSocket.send(sendPacket); }
+					catch(Exception e) { e.printStackTrace(); }
+					
 					try { clientSocket.receive(receivePacket); }
 					catch(Exception e) { e.printStackTrace(); }
 
-					String incomingMessage = receiveData.toString();
+					String incomingMessage = new String(receiveData);
 					
 					if(incomingMessage.contains("/coordinates"))
 						updateCoordinates(incomingMessage);
 					else if(incomingMessage.contains("/score"))
 						updateScore(incomingMessage);
-
-					sendData = getPlayerCoordinates(player).getBytes();
-					try { clientSocket.send(sendPacket); }
-					catch(Exception e) { e.printStackTrace(); }
 				}
 			}
 		});
@@ -135,9 +135,9 @@ public class GameGUI extends JFrame implements KeyListener
 		switch(player)
 		{
 			case 1:
-				return "/coords 1\\" + p1.getX() + "\\" + p1.getY();
+				return "/coords 1\\" + p1.getY();
 			case 2:
-				return "/coords 2\\" + p2.getX() + "\\" + p2.getY();
+				return "/coords 2\\" + p2.getY();
 		}
 		
 		return null;
