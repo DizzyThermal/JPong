@@ -129,6 +129,12 @@ public class GameGUI extends JFrame implements KeyListener
 					else if(incomingMessage.contains("/score"))
 						updateScore(incomingMessage);
 					repaint();
+					try {
+						Thread.sleep(15);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 			
